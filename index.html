@@ -69,16 +69,15 @@
           opacity: 1 !important;
         }
 
-        /* Style the presentation container to fill the print page */
+        /* Let the presentation container behave like a normal block element */
         .presentation-container {
-          position: absolute;
-          left: 0;
-          top: 0;
+          position: static !important;
           width: 100% !important;
-          height: 100% !important;
+          height: auto !important;
           max-width: none !important;
           border-radius: 0 !important;
           border: none !important;
+          box-shadow: none !important;
           overflow: visible !important;
           background: #ffffff !important;
         }
