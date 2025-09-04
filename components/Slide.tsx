@@ -195,8 +195,8 @@ const CareerSlide: React.FC<{ title: string; points: SlidePoint[], isActive: boo
 
 const EndSlide: React.FC<{ title: string, isActive: boolean, hasBeenSeen: boolean }> = ({ title, isActive, hasBeenSeen }) => (
     <div className="flex flex-col items-center justify-center h-full text-center p-12 bg-gradient-to-br from-sky-50 to-teal-50 relative overflow-hidden">
-        <div aria-hidden="true" className="absolute -top-16 -left-16 w-64 h-64 bg-sky-200 rounded-full filter blur-3xl opacity-50 animate-pulse"></div>
-        <div aria-hidden="true" className="absolute -bottom-24 -right-10 w-72 h-72 bg-teal-200 rounded-full filter blur-3xl opacity-50 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div aria-hidden="true" className={`absolute -top-16 -left-16 w-64 h-64 bg-sky-200 rounded-full filter blur-3xl opacity-50 animate-pulse`}></div>
+        <div aria-hidden="true" className={`absolute -bottom-24 -right-10 w-72 h-72 bg-teal-200 rounded-full filter blur-3xl opacity-50 animate-pulse`} style={{ animationDelay: '2s' }}></div>
         <h1 className={`text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-teal-500 relative z-10 ${!hasBeenSeen ? 'opacity-0' : ''} ${isActive ? 'animate-fade-in-up' : ''}`} style={{ animationDelay: '150ms' }}>
             {title}
         </h1>

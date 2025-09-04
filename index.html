@@ -42,6 +42,70 @@
         font-family: 'Poppins', sans-serif;
         overflow: hidden; /* Prevents scrolling */
       }
+      
+      @page {
+        size: landscape;
+        margin: 0;
+      }
+
+      @media print {
+        /* General reset for printing */
+        body {
+          overflow: visible !important;
+          background: #ffffff !important;
+        }
+
+        /* Hide all UI elements that should not be printed */
+        .no-print {
+          display: none !important;
+        }
+        
+        /* Force animations and transitions off */
+        *, *::before, *::after {
+          animation: none !important;
+          transition: none !important;
+          box-shadow: none !important;
+          /* Ensure fade-in elements are fully visible */
+          opacity: 1 !important;
+          transform: none !important;
+        }
+
+        /* Style the presentation container to fill the print page */
+        .presentation-container {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100% !important;
+          height: 100% !important;
+          max-width: none !important;
+          border-radius: 0 !important;
+          border: none !important;
+          overflow: visible !important;
+          background: #ffffff !important;
+        }
+
+        /* Override the flexbox sliding mechanism to stack slides vertically */
+        .slides-container {
+          display: block !important;
+          width: 100% !important;
+          height: auto !important;
+        }
+
+        /* Ensure each slide takes up exactly one full page */
+        .slide-wrapper {
+          width: 100vw !important;
+          height: 100vh !important;
+          display: block !important;
+          flex-shrink: 0 !important;
+          page-break-after: always;
+          overflow: hidden;
+        }
+        
+        /* Avoid a blank page after the last slide */
+        .slide-wrapper:last-child {
+          page-break-after: avoid;
+        }
+      }
     </style>
   <script type="importmap">
 {

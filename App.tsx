@@ -9,9 +9,9 @@ const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [seenSlides, setSeenSlides] = useState<Set<number>>(new Set([0]));
   const [isFullscreen, setIsFullscreen] = useState(false);
+  
   const presentationRef = useRef<HTMLDivElement>(null);
-
-
+  
   const slidesData: SlideContent[] = useMemo(() => [
     {
       type: 'title',
@@ -120,6 +120,10 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => {
@@ -129,16 +133,16 @@ const App: React.FC = () => {
 
   return (
     <main className="bg-slate-50 text-slate-800 w-screen h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-        <div ref={presentationRef} className="w-full max-w-6xl aspect-video bg-white/60 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden relative flex flex-col border border-white/20">
+        <div ref={presentationRef} className={`presentation-container w-full max-w-6xl aspect-video ${isFullscreen ? 'bg-white' : 'bg-white/60 backdrop-blur-xl'} rounded-2xl shadow-2xl overflow-hidden relative flex flex-col border border-white/20`}>
             {/* Animated Gradient Blobs */}
-            <div className="absolute top-0 -left-24 w-96 h-96 bg-gradient-to-br from-teal-200 via-sky-200 to-transparent rounded-full opacity-50 filter blur-3xl animate-blob-float"></div>
-            <div className="absolute bottom-0 -right-24 w-96 h-96 bg-gradient-to-br from-sky-200 via-purple-200 to-transparent rounded-full opacity-50 filter blur-3xl animate-blob-float" style={{ animationDelay: '5s', animationDuration: '20s' }}></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] bg-gradient-to-br from-pink-200 via-yellow-100 to-transparent rounded-full opacity-40 filter blur-3xl animate-blob-float" style={{ animationDelay: '10s', animationDuration: '25s' }}></div>
+            <div className="no-print absolute top-0 -left-24 w-96 h-96 bg-gradient-to-br from-teal-200 via-sky-200 to-transparent rounded-full opacity-50 filter blur-3xl animate-blob-float"></div>
+            <div className="no-print absolute bottom-0 -right-24 w-96 h-96 bg-gradient-to-br from-sky-200 via-purple-200 to-transparent rounded-full opacity-50 filter blur-3xl animate-blob-float" style={{ animationDelay: '5s', animationDuration: '20s' }}></div>
+            <div className="no-print absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] bg-gradient-to-br from-pink-200 via-yellow-100 to-transparent rounded-full opacity-40 filter blur-3xl animate-blob-float" style={{ animationDelay: '10s', animationDuration: '25s' }}></div>
 
-            <div className="flex-grow flex transition-transform duration-700 ease-in-out"
+            <div className="slides-container flex-grow flex transition-transform duration-700 ease-in-out"
                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                 {slidesData.map((slide, index) => (
-                    <div key={index} className="w-full h-full flex-shrink-0">
+                    <div key={index} className="w-full h-full flex-shrink-0 slide-wrapper">
                         <Slide 
                           content={slide} 
                           isActive={index === currentSlide} 
@@ -148,39 +152,56 @@ const App: React.FC = () => {
                 ))}
             </div>
             
-            <div className="absolute bottom-4 right-4 text-xs text-slate-400 bg-white/50 px-2 py-1 rounded-full backdrop-blur-sm z-10" aria-live="polite">
-                <span>{currentSlide + 1}</span>
-                <span className="mx-1">/</span>
-                <span>{slidesData.length}</span>
+            <div className="no-print">
+                <div className="absolute bottom-4 right-4 text-xs text-slate-400 bg-white/50 px-2 py-1 rounded-full backdrop-blur-sm z-10" aria-live="polite">
+                    <span>{currentSlide + 1}</span>
+                    <span className="mx-1">/</span>
+                    <span>{slidesData.length}</span>
+                </div>
+
+                <ProgressBar current={currentSlide} total={slidesData.length} />
+
+                <Navigation 
+                    onPrev={prevSlide} 
+                    onNext={nextSlide} 
+                    isFirst={currentSlide === 0}
+                    isLast={currentSlide === slidesData.length - 1}
+                />
+            
+                {!isFullscreen && (
+                    <button
+                    onClick={toggleFullscreen}
+                    className="absolute bottom-4 left-4 p-3 rounded-full bg-slate-100/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-300 z-20"
+                    aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+                    >
+                    {isFullscreen ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0v4m0-4h-4m-4-4l-6 6m0 0v-4m0 4h4" />
+                        </svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4h4m-4 0l5 5m7-5h4v4m-4 0l5 5m-12 7v-4h4m-4 0l5-5m7 12h-4v-4m4 0l-5-5" />
+                        </svg>
+                    )}
+                    </button>
+                )}
+
+                {!isFullscreen && (
+                    <button
+                        id="pdf-download-button"
+                        onClick={handlePrint}
+                        className="absolute bottom-4 left-20 p-3 rounded-full bg-slate-100/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-300 z-20"
+                        aria-label="Download as PDF"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
+                        </svg>
+                    </button>
+                )}
             </div>
-
-            <ProgressBar current={currentSlide} total={slidesData.length} />
-
-            <Navigation 
-                onPrev={prevSlide} 
-                onNext={nextSlide} 
-                isFirst={currentSlide === 0}
-                isLast={currentSlide === slidesData.length - 1}
-            />
-
-            <button
-              onClick={toggleFullscreen}
-              className="absolute bottom-4 left-4 p-3 rounded-full bg-slate-100/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-300 z-20"
-              aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-            >
-              {isFullscreen ? (
-                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0v4m0-4h-4m-4-4l-6 6m0 0v-4m0 4h4" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4h4m-4 0l5 5m7-5h4v4m-4 0l5 5m-12 7v-4h4m-4 0l5-5m7 12h-4v-4m4 0l-5-5" />
-                </svg>
-              )}
-            </button>
         </div>
         
-        <footer className="absolute bottom-4 text-slate-400 text-sm">
+        <footer className="no-print absolute bottom-4 text-slate-400 text-sm">
             Presentation by Bachtiar Aryansyah Putra
         </footer>
     </main>
