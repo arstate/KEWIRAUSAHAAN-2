@@ -49,17 +49,6 @@
       }
 
       @media print {
-        /*
-          --- Printing Instructions for Best Results ---
-          1. Destination: Save as PDF
-          2. Paper Size:  Legal
-          3. Layout:      Landscape (usually automatic)
-          4. Margins:     Minimum or None
-          5. Options:     CHECK "Background graphics"
-          
-          The 90% scale is automatically applied by this stylesheet.
-        */
-      
         /* General reset for printing */
         body {
           overflow: visible !important;
@@ -78,7 +67,6 @@
           box-shadow: none !important;
           /* Ensure fade-in elements are fully visible */
           opacity: 1 !important;
-          transform: none !important;
         }
 
         /* Style the presentation container to fill the print page */
@@ -100,25 +88,17 @@
           display: block !important;
           width: 100% !important;
           height: auto !important;
+          transform: none !important; /* CRUCIAL: Resets the slide position for printing */
         }
 
-        /* Ensure each slide takes up exactly one full page and center its content */
+        /* Ensure each slide takes up exactly one full page */
         .slide-wrapper {
           width: 100vw !important;
           height: 100vh !important;
-          display: flex !important;
-          justify-content: center !important;
-          align-items: center !important;
+          display: block !important;
           flex-shrink: 0 !important;
           page-break-after: always;
           overflow: hidden;
-        }
-        
-        /* Apply 90% scale to the slide content */
-        .slide-wrapper > * {
-          transform: scale(0.9) !important;
-          width: 100%;
-          height: 100%;
         }
         
         /* Avoid a blank page after the last slide */
