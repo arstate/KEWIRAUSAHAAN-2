@@ -9,13 +9,14 @@ const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [seenSlides, setSeenSlides] = useState<Set<number>>(new Set([0]));
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [uiVisible, setUiVisible] = useState(true);
   
   const presentationRef = useRef<HTMLDivElement>(null);
   
   const slidesData: SlideContent[] = useMemo(() => [
     {
       type: 'title',
-      title: 'Mimpi: Membangun Ekosistem Kreatif',
+      title: 'Membangun Agensi Kreatif',
       subtitle: 'BACHTIAR ARYANSYAH PUTRA (24091367032)',
     },
     {
@@ -25,7 +26,7 @@ const App: React.FC = () => {
     },
     {
       type: 'list',
-      title: 'Mimpi: Membangun Ekosistem Kreatif',
+      title: 'Membangun Agensi Kreatif',
       points: [
         { heading: 'Apa', text: 'Mendirikan Creative & Visual Storytelling Agency yang visioner dan inovatif.' },
         { heading: 'Fokus', text: 'Bukan sekadar dokumentasi teknis, melainkan seni bercerita melalui visual (visual storytelling).' },
@@ -105,7 +106,11 @@ const App: React.FC = () => {
   }, []);
 
   const handleFullscreenChange = useCallback(() => {
-    setIsFullscreen(!!document.fullscreenElement);
+    const isCurrentlyFullscreen = !!document.fullscreenElement;
+    setIsFullscreen(isCurrentlyFullscreen);
+    if (!isCurrentlyFullscreen) {
+      setUiVisible(true); // Always show UI when exiting fullscreen
+    }
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -126,10 +131,37 @@ const App: React.FC = () => {
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.target !== document.body) {
+        return;
+      }
+
+      switch (event.key) {
+        case 'ArrowRight':
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+          prevSlide();
+          break;
+        case 'p':
+        case 'P':
+          if (isFullscreen) {
+            setUiVisible(prev => !prev);
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleFullscreenChange]);
+  }, [handleFullscreenChange, nextSlide, prevSlide, isFullscreen]);
 
   return (
     <main className="bg-slate-50 text-slate-800 w-screen h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
@@ -152,7 +184,7 @@ const App: React.FC = () => {
                 ))}
             </div>
             
-            <div className="no-print">
+            <div className={`no-print transition-opacity duration-300 ${!uiVisible && isFullscreen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                 <div className="absolute bottom-4 right-4 text-xs text-slate-400 bg-white/50 px-2 py-1 rounded-full backdrop-blur-sm z-10" aria-live="polite">
                     <span>{currentSlide + 1}</span>
                     <span className="mx-1">/</span>
