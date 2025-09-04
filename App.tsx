@@ -1,8 +1,9 @@
+
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { Slide } from './components/Slide';
-import { Navigation } from './components/Navigation';
-import { SlideContent } from './types';
-import { ProgressBar } from './components/ProgressBar';
+import { Slide } from './components/Slide.tsx';
+import { Navigation } from './components/Navigation.tsx';
+import { SlideContent } from './types.ts';
+import { ProgressBar } from './components/ProgressBar.tsx';
 
 const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

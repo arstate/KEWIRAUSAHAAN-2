@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { SlideContent, SlidePoint } from '../types';
+import { SlideContent, SlidePoint } from '../types.ts';
 
 interface SlideProps {
   content: SlideContent;
