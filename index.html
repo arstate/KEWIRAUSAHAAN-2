@@ -99,12 +99,12 @@
           flex-shrink: 0 !important;
           overflow: hidden;
           page-break-inside: avoid; /* Prevent a slide from being split */
-          page-break-after: always; /* Add a break after every slide... */
+          page-break-after: avoid; /* Prevent breaks after slides */
         }
         
-        /* ...but prevent a page break after the very last slide. */
-        .slide-wrapper:last-child {
-            page-break-after: avoid;
+        /* Add a page break *before* every slide except the very first one. */
+        .slide-wrapper:not(:first-child) {
+            page-break-before: always;
         }
       }
     </style>
