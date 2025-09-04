@@ -91,19 +91,19 @@
           transform: none !important; /* CRUCIAL: Resets the slide position for printing */
         }
 
-        /* Ensure each slide takes up exactly one full page */
+        /* Ensure each slide takes up exactly one full page, and control page breaks */
         .slide-wrapper {
           width: 100vw !important;
           height: 100vh !important;
           display: block !important;
           flex-shrink: 0 !important;
-          page-break-after: always;
           overflow: hidden;
+          page-break-inside: avoid; /* Prevent a slide from being split */
         }
         
-        /* Avoid a blank page after the last slide */
-        .slide-wrapper:last-child {
-          page-break-after: avoid;
+        /* Force a page break *before* every slide except the very first one */
+        .slide-wrapper ~ .slide-wrapper {
+            page-break-before: always;
         }
       }
     </style>
