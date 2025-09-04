@@ -43,14 +43,26 @@ const ImageTextSplitSlide: React.FC<{ title: string; imageUrl?: string, isActive
                 {title}
             </h2>
         </div>
-        <div className="w-7/12 h-full overflow-hidden">
+        <div className="w-7/12 h-full overflow-hidden p-8">
              {imageUrl && (
-                <div className={`w-full h-full ${!hasBeenSeen ? 'opacity-0' : ''} ${isActive ? 'animate-fade-in-up' : ''}`} style={{ animationDelay: '300ms' }}>
+                <div className={`group relative w-full h-full ${!hasBeenSeen ? 'opacity-0' : ''} ${isActive ? 'animate-fade-in-up' : ''}`} style={{ animationDelay: '300ms' }}>
                     <img 
                         src={imageUrl} 
                         alt={title}
                         className="w-full h-full object-contain object-center"
                     />
+                    <a
+                        href={imageUrl}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-yellow-400 hover:bg-yellow-500 rounded-full flex items-center justify-center text-slate-800 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg scale-90 group-hover:scale-100"
+                        aria-label="Download Image"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                    </a>
                 </div>
             )}
         </div>

@@ -22,7 +22,7 @@ const App: React.FC = () => {
     {
       type: 'image_text_split',
       title: 'VISUAL ART THAT TELLS MY DREAM',
-      imageUrl: 'https://images.unsplash.com/photo-1554228198-36a3fa994f7b?q=80&w=1964&auto=format&fit=crop',
+      imageUrl: 'https://lh3.googleusercontent.com/pw/AP1GczNBit-Obw0RUPNk15UILbkwWCUQfMjCM7kiEchrs9RN0CzyHVeojlRDU6-xG85MJ5v-Mtp5bSg2-VVqhWu2HktHfWxzqPUfmwrxUVf2-8cKMvMJavs=w2400',
     },
     {
       type: 'list',
